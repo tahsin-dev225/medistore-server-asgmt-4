@@ -23,18 +23,19 @@ const getSellerMedicines = async (req: Request, res: Response) => {
       // const { search } = req.query
       // const searchString = typeof search === 'string' ? search : undefined
 
-      const {sellerId} = req.params;
+      // const {sellerId} = req.params;
       const user = req.user;
       
-      if(!user || user.id !== sellerId){
+      if(!user || user.role !== "SELLER"){
         return res.status(401).json({
           error  : "Unothorized!, You are not seller."
         })
       }
-
       const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
 
-      const result = await MedicineService.getSellerMedicines({ page, limit, skip,sortBy,sortOrder },sellerId as string)
+      const result = await MedicineService.getSellerMedicines(
+        // { page, limit, skip,sortBy,sortOrder },
+        user?.id as string)
       res.status(200).json(result)
     } catch (e) {
       res.status(400).json({

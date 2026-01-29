@@ -10,19 +10,21 @@ const createOrder = async (data :Omit< Order, 'id' | 'createdAt' | 'status' | 'u
    return result;
 }
 
-const getSellerOrder = async ({
-    page,
-    limit,
-    skip,
-    sortBy,
-    sortOrder
-}: {
-    page : number,
-    limit : number,
-    skip : number,
-    sortBy : string,
-    sortOrder : string 
-},sellerId : string) => {
+const getSellerOrder = async (
+//     {
+//     page,
+//     limit,
+//     skip,
+//     sortBy,
+//     sortOrder
+// }: {
+//     page : number,
+//     limit : number,
+//     skip : number,
+//     sortBy : string,
+//     sortOrder : string 
+// },
+sellerId : string) => {
     const andConditions: OrderWhereInput[] = []
 
 
@@ -33,29 +35,29 @@ const getSellerOrder = async ({
     }
 
     const sellerAllOrder = await prisma.order.findMany({
-      take : limit,
-      skip,
+    //   take : limit,
+    //   skip,
         where: {
-            AND: andConditions
+            sellerId
         },
-        orderBy : {
-          [sortBy] : sortOrder
-        }
+        // orderBy : {
+        //   [sortBy] : sortOrder
+        // }
     });
 
-    const total = await prisma.order.count({
-        where: {
-            AND: andConditions
-        }
-    })
+    // const total = await prisma.order.count({
+    //     where: {
+    //         AND: andConditions
+    //     }
+    // })
     return {
         data : sellerAllOrder,
-        pagination : {
-            total,
-            page,
-            limit,
-            totalPage : Math.ceil(total / limit)
-        }
+        // pagination : {
+        //     total,
+            // page,
+            // limit,
+        //     totalPage : Math.ceil(total / limit)
+        // }
     };
 };
 

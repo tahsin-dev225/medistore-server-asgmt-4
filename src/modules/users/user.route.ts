@@ -31,7 +31,7 @@ router.patch(
 
 
 router.delete(
-  '/:id',
+  '/:userId',
   auth(userRole.ADMIN),
   UserController.deleteUser
 )

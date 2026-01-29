@@ -10,7 +10,7 @@ router.get(
 )
 
 router.delete(
-  '/:categoryId', 
+  '/:reviewId', 
   auth(userRole.ADMIN,userRole.CUSTOMER),
   reviewController.deleteReview
 )

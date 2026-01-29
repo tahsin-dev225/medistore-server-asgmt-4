@@ -9,6 +9,8 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from './lib/auth';
 import { orderRoute } from './modules/order/order.route';
 import { checkBannedUser } from './middlewere/checkBannedUser';
+import { userRoute } from './modules/users/user.route';
+import { reviewRoute } from './modules/review/review.route';
 
 const app : Application = express();
 
@@ -21,11 +23,13 @@ app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());
 
-app.use(checkBannedUser);
+// app.use(checkBannedUser);
 
 app.use("/medicine", medicineRoute)
 app.use("/category", categoryRoute)
 app.use("/order", orderRoute)
+app.use("/user", userRoute)
+app.use("/review", reviewRoute)
 // app.use("/reviews", )
 
 

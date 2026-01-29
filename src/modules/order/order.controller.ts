@@ -25,18 +25,20 @@ const createOrder = async (req : Request,res:Response, next : NextFunction)=>{
 const getSellerOrder = async (req: Request, res: Response) => {
     try {
 
-      const {sellerId} = req.params;
+      // const {sellerId} = req.params;
       const user = req.user;
       
-      if(!user || user.id !== sellerId){
+      if(!user || user.role !== "SELLER"){
         return res.status(401).json({
           error  : "Unothorized!, You are not seller."
         })
       }
 
-      const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
+      // const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
 
-      const result = await orderService.getSellerOrder({ page, limit, skip,sortBy,sortOrder },sellerId as string)
+      const result = await orderService.getSellerOrder(
+        // { page, limit, skip,sortBy,sortOrder },
+        user.id as string)
       res.status(200).json(result)
     } catch (e) {
       res.status(400).json({

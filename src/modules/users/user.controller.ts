@@ -37,6 +37,11 @@ const getUserById = async (req: Request,res: Response,next: NextFunction,) => {
 export const updateMyProfile = async (req: Request,res: Response,next: NextFunction) => {
   try {
     const userId = req.user!.id;
+    if(userId !== req.params.userId){
+      return res.status(400).json({
+        message : 'Unauthorized!'
+      })
+    }
     const { name, image } = req.body;
 
     const result = await userService.updateProfile(userId, {

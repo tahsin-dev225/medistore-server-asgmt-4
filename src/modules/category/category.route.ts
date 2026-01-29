@@ -10,7 +10,7 @@ router.get(
 )
 
 router.delete(
-  '/:categoryId', 
+  '/:categoryId',
   auth(userRole.ADMIN),
   categoryController.deleteCategory
 )

@@ -16,7 +16,7 @@ router.get(
 )
 
 router.get(
-  'seller/:sellerId',
+  '/seller/all',
   auth(userRole.SELLLER),
   MedicineControlle.getSellerMedicines
 )
