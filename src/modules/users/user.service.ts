@@ -1,5 +1,5 @@
 import {  User } from "../../../generated/prisma/client";
-import {  UserWhereInput } from "../../../generated/prisma/models";
+import {  UserUpdateInput, UserWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
 
@@ -44,9 +44,22 @@ const getUserById = async (id: string) => {
   });
 };
 
-const updateUser = async (id: string, data: Partial<User>) => {
+export const updateProfile = async (
+  userId: string,
+  data: Pick<UserUpdateInput, "name" | "image">
+) => {
   return prisma.user.update({
-    where: { id },
+    where: { id: userId },
+    data,
+  });
+};
+
+export const adminUpdateUserStatus = async (
+  userId: string,
+  data: Pick<UserUpdateInput, "status" | "isBanned">
+) => {
+  return prisma.user.update({
+    where: { id: userId },
     data,
   });
 };
@@ -60,7 +73,8 @@ const deleteUser = async (id: string) => {
 export const userService = {
   getAllUsers,
   getUserById,
-  updateUser,
+  updateProfile,
+  adminUpdateUserStatus,
   deleteUser,
 
 };

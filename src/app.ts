@@ -8,6 +8,7 @@ import { categoryRoute } from './modules/category/category.route';
 import { toNodeHandler } from "better-auth/node";
 import { auth } from './lib/auth';
 import { orderRoute } from './modules/order/order.route';
+import { checkBannedUser } from './middlewere/checkBannedUser';
 
 const app : Application = express();
 
@@ -19,6 +20,8 @@ app.use(cors({
 app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());
+
+app.use(checkBannedUser);
 
 app.use("/medicine", medicineRoute)
 app.use("/category", categoryRoute)

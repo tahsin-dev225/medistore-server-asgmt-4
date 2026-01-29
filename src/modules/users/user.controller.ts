@@ -8,7 +8,6 @@ import { userService } from "./user.service";
 
 const getAllUser = async (req: Request, res: Response) => {
     try {
-
       const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
 
       const result = await userService.getAllUsers({ page, limit, skip })
@@ -21,36 +20,62 @@ const getAllUser = async (req: Request, res: Response) => {
     }
 }
 
-const getUserById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const getUserById = async (req: Request,res: Response,next: NextFunction,) => {
   try {
     const result = await userService.getUserById(
       req.params.userId as string
     );
     res.status(200).json(result);
-  } catch (error) {
-    next(error);
+  } catch  (e) {
+      res.status(400).json({
+          error: "Couldn't get User data.",
+          details: e
+      })
   }
 };
 
-const updateUser = async (req: Request, res: Response,next: NextFunction,) => {
+export const updateMyProfile = async (req: Request,res: Response,next: NextFunction) => {
   try {
-    const result = await userService.updateUser(
-      req.params.userId as string,
-      req.body,
-    );
-    res.status(200).json({
-      success : true,
-      message : "User updated successtully.",
-      data : result
+    const userId = req.user!.id;
+    const { name, image } = req.body;
+
+    const result = await userService.updateProfile(userId, {
+      name,
+      image,
     });
-  } catch (error) {
-    next(error);
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: result,
+    });
+  } catch (e) {
+      res.status(400).json({
+          error: "Couldn't update Users data.",
+          details: e
+      })
   }
 };
+
+export const adminUpdateUser = async (req: Request,res: Response,next: NextFunction ) => {
+  try {
+    const { status, isBanned } = req.body;
+
+    const result = await userService.adminUpdateUserStatus(req.params.userId as string, { status, isBanned });
+
+    res.status(200).json({
+      success: true,
+      message: "User status updated",
+      data: result,
+    });
+  } catch (e) {
+      res.status(400).json({
+          error: "Couldn't update Users status.",
+          details: e
+      })
+  }
+};
+
 
 const deleteUser = async ( req: Request,res: Response,next: NextFunction,) => {
   try {
@@ -72,15 +97,19 @@ const deleteUser = async ( req: Request,res: Response,next: NextFunction,) => {
         });
       }
 
-  } catch (error) {
-    next(error);
+  } catch (e) {
+      res.status(400).json({
+          error: "Couldn't delete User.",
+          details: e
+      })
   }
 };
 
 
-export const orderControlle = {
+export const UserController = {
   getAllUser,
   getUserById,
-  updateUser,
+  updateMyProfile,
+  adminUpdateUser,
   deleteUser
 }

@@ -3,7 +3,7 @@ import {  OrderWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
 
-const createOrder = async (data :Omit< Order, 'id' | 'createdAt' | 'updatedAt'>) => {
+const createOrder = async (data :Omit< Order, 'id' | 'createdAt' | 'status' | 'updatedAt'>) => {
    const result = await prisma.order.create({
     data 
    })
