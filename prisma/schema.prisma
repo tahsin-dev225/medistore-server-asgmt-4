@@ -34,9 +34,12 @@ model Medicine {
 }
 
 model Review {
-  id         String   @id @default(ulid())
-  content    String   @db.Text
-  customerId String // better auth
+  id      String @id @default(ulid())
+  content String @db.Text
+
+  customerId String
+  customer   User   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
   medicineId String
   medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
 
@@ -55,16 +58,26 @@ model Order {
   medicineId String
   medicine   Medicine @relation(fields: [medicineId], references: [id])
 
-  // sellerId String 
-  // seller  User @relation(fields: [sellerId],references: [id])
   customerId String
+  customer   User   @relation("CustomerOrders", fields: [customerId], references: [id])
+
+  sellerId String
+  seller   User   @relation("SellerOrders", fields: [sellerId], references: [id])
+
   quantity   Int
   totalPrice Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  status     OrderStatus @default(PENDING)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   @@index([customerId])
   @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
 }
 
 model Category {
@@ -86,9 +99,12 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  role      String?    @default("CUSTOMER")
-  status    String?    @default("ACTIVE")
-  medicines Medicine[]
+  role           String?    @default("CUSTOMER")
+  status         String?    @default("ACTIVE")
+  medicines      Medicine[]
+  customerOrders Order[]    @relation("CustomerOrders")
+  sellerOrders   Order[]    @relation("SellerOrders")
+  reviews        Review[]
 
   @@unique([email])
   @@map("user")

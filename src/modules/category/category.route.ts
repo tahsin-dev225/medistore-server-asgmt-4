@@ -5,13 +5,12 @@ import auth, { userRole } from '../../middlewere/auth';
 const router = express.Router();
 
 router.get(
-  '/', 
-  auth(userRole.ADMIN),
+  '/',
   categoryController.getAllCategory
 )
 
 router.delete(
-  '/', 
+  '/:categoryId', 
   auth(userRole.ADMIN),
   categoryController.deleteCategory
 )

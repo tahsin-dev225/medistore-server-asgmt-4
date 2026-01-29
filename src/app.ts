@@ -7,6 +7,7 @@ import { medicineRoute } from './modules/medicine/medicine.route';
 import { categoryRoute } from './modules/category/category.route';
 import { toNodeHandler } from "better-auth/node";
 import { auth } from './lib/auth';
+import { orderRoute } from './modules/order/order.route';
 
 const app : Application = express();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 
 app.use("/medicine", medicineRoute)
 app.use("/category", categoryRoute)
+app.use("/order", orderRoute)
 // app.use("/reviews", )
 
 

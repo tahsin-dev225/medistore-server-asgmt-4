@@ -13,6 +13,60 @@ const createMedicine = async (data : Omit<Medicine,'id' | 'createdAt' | 'updated
    return result;
 }
 
+const getSellerMedicines = async ({
+    page,
+    limit,
+    skip,
+    sortBy,
+    sortOrder
+}: {
+    page : number,
+    limit : number,
+    skip : number,
+    sortBy : string,
+    sortOrder : string 
+},sellerId : string) => {
+    const andConditions: MedicineWhereInput[] = []
+
+
+    if (sellerId) {
+        andConditions.push({
+            sellerId 
+        })
+    }
+
+    const allPost = await prisma.medicine.findMany({
+      take : limit,
+      skip,
+        where: {
+            AND: andConditions
+        },
+        orderBy : {
+          [sortBy] : sortOrder
+        },
+        include : {
+            _count : {
+                select : {review : true}
+            }
+        }
+    });
+
+    const total = await prisma.medicine.count({
+        where: {
+            AND: andConditions
+        }
+    })
+    return {
+        data : allPost,
+        pagination : {
+            total,
+            page,
+            limit,
+            totalPage : Math.ceil(total / limit)
+        }
+    };
+};
+
 const getAllMedicines = async ({
     search,
     sellerId,
@@ -89,6 +143,7 @@ const getMedicineById = async (id: string) => {
     where: { id },
     include: {
       category: true,
+      review : true
     },
   });
 };
@@ -108,6 +163,7 @@ const deleteMedicine = async (id: string) => {
 
 export const MedicineService = {
   createMedicine,
+  getSellerMedicines,
   getAllMedicines,
   getMedicineById,
   updateMedicine,

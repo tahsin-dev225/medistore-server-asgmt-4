@@ -10,6 +10,29 @@ router.get(
   MedicineControlle.getAllMedicines
 )
 
+router.get(
+  '/:medicineId',
+  MedicineControlle.getMedicineId
+)
+
+router.get(
+  'seller/:sellerId',
+  auth(userRole.SELLLER),
+  MedicineControlle.getSellerMedicines
+)
+
+router.patch(
+  '/:id',
+  auth(userRole.SELLLER,userRole.ADMIN),
+  MedicineControlle.updateMedicine
+)
+
+router.delete(
+  '/:id',
+  auth(userRole.SELLLER,userRole.ADMIN),
+  MedicineControlle.deleteMedicine
+)
+
 router.post(
   '/',
   auth(userRole.SELLLER),
