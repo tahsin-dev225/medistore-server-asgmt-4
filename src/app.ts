@@ -23,13 +23,13 @@ app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());
 
-// app.use(checkBannedUser);
+app.use(checkBannedUser);
 
-app.use("/medicine", medicineRoute)
-app.use("/category", categoryRoute)
-app.use("/order", orderRoute)
-app.use("/user", userRoute)
-app.use("/review", reviewRoute)
+app.use("/api/medicine", medicineRoute)
+app.use("/api/category", categoryRoute)
+app.use("/api/order", orderRoute)
+app.use("/api/user", userRoute)
+app.use("/api/review", reviewRoute)
 // app.use("/reviews", )
 
 

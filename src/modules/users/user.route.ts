@@ -11,7 +11,7 @@ router.get(
 )
 
 router.get(
-  '/:orderId',
+  '/:userId',
   auth(userRole.ADMIN,userRole.CUSTOMER, userRole.SELLLER),
 
 )
