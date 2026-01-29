@@ -79,11 +79,7 @@ const getOrderById = async (
   }
 };
 
-const updateOrder = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const updateOrder = async (req: Request, res: Response,next: NextFunction,) => {
   try {
     const result = await orderService.updateOrder(
       req.params.id as string,

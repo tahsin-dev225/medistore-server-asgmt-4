@@ -26,7 +26,7 @@ const getAllReview = async (req : Request, res : Response) =>{
       res.status(200).json(result)
     } catch (error) {
       res.status(400).json({
-        error : "Couldn't get category data.",
+        error : "Couldn't get Review data.",
         details : error
       })
     }
@@ -35,13 +35,13 @@ const getAllReview = async (req : Request, res : Response) =>{
 
 const deleteReview = async (req : Request, res : Response) =>{
     try {
-      const {categoryId} = req.params;
+      const {reviewId} = req.params;
 
-      const result = await reviewService.deleteReview(categoryId as string);
+      const result = await reviewService.deleteReview(reviewId as string);
       res.status(200).json(result)
     } catch (error) {
       res.status(400).json({
-        error : "Category delete failed",
+        error : "Review delete failed",
         details : error
       })
     }

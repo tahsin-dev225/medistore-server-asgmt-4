@@ -1,42 +1,40 @@
-import { Category } from "../../../generated/prisma/client";
+import {  Review } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
-
-const creatCategory = async (data : Omit<Category,'id' | 'createdAt' >) => {
-   const result = await prisma.category.create({
+const createReview = async (data : Omit<Review,'id' | 'createdAt' | 'updatedAt' >) => {
+   const result = await prisma.review.create({
     data 
    })
    return result;
 }
 
-
-const getAllCategory = async () =>{
-  return await prisma.category.findMany()
+const getAllReview = async () =>{
+  return await prisma.review.findMany()
 }
 
-const deleteCategory = async (categoryId : string) => {
-  const categoryData = await prisma.category.findFirst({
+const deleteReview = async (reviewId : string) => {
+  const reviewData = await prisma.review.findFirst({
     where : {
-      id : categoryId
+      id : reviewId
     },
     select : {
       id : true
     }
   })
 
-  if(!categoryData){
-    throw new Error("There are no category with this id.")
+  if(!reviewData){
+    throw new Error("There are no review with this id.")
   }
 
-  return await prisma.category.delete({
+  return await prisma.review.delete({
     where :{
-      id : categoryData.id
+      id : reviewData.id
     }
   })
 }
 
-export const CategoryService = {
-  creatCategory,
-  getAllCategory,
-  deleteCategory
+export const reviewService = {
+  createReview,
+  getAllReview,
+  deleteReview
 }
