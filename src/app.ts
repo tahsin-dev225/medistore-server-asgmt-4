@@ -23,17 +23,15 @@ app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());
 
-app.use(checkBannedUser);
 
 app.use("/api/medicine", medicineRoute)
 app.use("/api/category", categoryRoute)
 app.use("/api/order", orderRoute)
 app.use("/api/user", userRoute)
 app.use("/api/review", reviewRoute)
-// app.use("/reviews", )
 
 
-app.get('/', (req,res)=>{
+app.get('/', checkBannedUser, (req,res)=>{
   res.send("Medicine store server")
 })
 

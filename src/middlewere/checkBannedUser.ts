@@ -20,11 +20,8 @@ export const checkBannedUser = async (
       select: { isBanned: true },
     });
 
-    if (!user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
-    if (user.isBanned) {
+    if (user?.isBanned) {
       return res.status(403).json({
         success: false,
         message: "Your account has been banned.",
