@@ -11,6 +11,7 @@ import { orderRoute } from './modules/order/order.route';
 import { checkBannedUser } from './middlewere/checkBannedUser';
 import { userRoute } from './modules/users/user.route';
 import { reviewRoute } from './modules/review/review.route';
+import { cartRouter } from './modules/carts/cart.route';
 
 const app : Application = express();
 
@@ -29,6 +30,7 @@ app.use("/api/category", categoryRoute)
 app.use("/api/order", orderRoute)
 app.use("/api/user", userRoute)
 app.use("/api/review", reviewRoute)
+app.use("/api/cart", cartRouter)
 
 
 app.get('/',  (req,res)=>{
