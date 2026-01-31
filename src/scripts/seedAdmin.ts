@@ -8,7 +8,8 @@ async function seeedAdmin() {
       email : "ahmedtasin225@gmail.com",
       role : userRole.ADMIN,
       password : "asdfasdf",
-      emailVerified : true
+      emailVerified : true,
+      image: "https://example.com/image.png"
     }
 
     const existingUser = await prisma.user.findUnique({
@@ -21,7 +22,7 @@ async function seeedAdmin() {
       throw new Error("User already exists!")
     }
 
-    const signUpAdmin = await fetch("http://localhost:5000/api/auth/sign-up/email", {
+    const signUpAdmin = await fetch("http://localhost:3000/api/auth/sign-up/email", {
       method : "POST",
       headers : {
         "Content-Type" : "application/json"
@@ -32,19 +33,19 @@ async function seeedAdmin() {
      console.log(signUpAdmin);
 
 
-     if(signUpAdmin.ok){
-      await prisma.user.update({
-        where : {
-          email : adminData.email
-        },
-        data : {
-          emailVerified : true
-        }
-      })
-     }
+    //  if(signUpAdmin.ok){
+    //   await prisma.user.update({
+    //     where : {
+    //       email : adminData.email
+    //     },
+    //     data : {
+    //       emailVerified : true
+    //     }
+    //   })
+    //  }
 
   } catch (error) {
-    console.error(error);
+    console.log('errrorr',error);
   }
 }
 

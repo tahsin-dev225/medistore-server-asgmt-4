@@ -31,7 +31,7 @@ app.use("/api/user", userRoute)
 app.use("/api/review", reviewRoute)
 
 
-app.get('/', checkBannedUser, (req,res)=>{
+app.get('/',  (req,res)=>{
   res.send("Medicine store server")
 })
 
