@@ -7,14 +7,13 @@ import { userRole } from "../../middlewere/auth";
 const createOrder = async (req : Request,res:Response, next : NextFunction)=>{
   try {
     const customerId = req.user?.id ;
-    const {title, medicineId, sellerId, quantity, totalPrice}  = req.body;
     if( !customerId){
       return res.status(401).json({
         error  : "Unothorized!"
       })
     }
 
-    const result = await orderService.createOrder({title , medicineId,customerId, sellerId, quantity, totalPrice})
+    const result = await orderService.createOrder(customerId)
     res.status(201).json(result)
   }catch (e) {
     next(e)

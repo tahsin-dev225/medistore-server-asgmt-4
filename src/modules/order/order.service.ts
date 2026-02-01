@@ -3,12 +3,48 @@ import {  OrderWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
 
-const createOrder = async (data :Omit< Order, 'id' | 'createdAt' | 'status' | 'updatedAt'>) => {
-   const result = await prisma.order.create({
-    data 
-   })
-   return result;
-}
+const createOrder = async (customerId: string) => {
+
+  const cart = await prisma.cart.findUnique({
+    where: { customerId },
+    include: {
+      items: {
+        include: {
+          medicine: true,
+        },
+      },
+    },
+  });
+
+  if (!cart || cart.items.length === 0) {
+    throw new Error("Cart is empty");
+  }
+
+  const orders = [];
+
+  for (const item of cart.items) {
+    const totalPrice = item.quantity * item.medicine.price;
+
+    const order = await prisma.order.create({
+      data: {
+        medicineId: item.medicineId,
+        customerId,
+        sellerId: item.medicine.sellerId,
+        quantity: item.quantity,
+        unitPrice: item.medicine.price,
+        totalPrice,
+      },
+    });
+
+    orders.push(order);
+  }
+
+  await prisma.cartItem.deleteMany({
+    where: { cartId: cart.id },
+  });
+
+  return orders;
+};
 
 const getSellerOrder = async (
 //     {

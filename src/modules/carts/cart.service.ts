@@ -1,8 +1,64 @@
 import { prisma } from "../../lib/prisma";
 
-const getOrCreateCart = async (userId: string) => {
+const addToCart = async (
+  customerId: string,
+  medicineId: string,
+  quantity: number
+) => {
+  
+  const medicine = await prisma.medicine.findUnique({
+    where: { id: medicineId },
+  });
+
+  if (!medicine) {
+    throw new Error("Medicine not found");
+  }
+
+  const cart = await prisma.cart.upsert({
+    where: { customerId },
+    update: {},
+    create: { customerId },
+  });
+
+  const cartItem = await prisma.cartItem.findUnique({
+    where: {
+      cartId_medicineId: {
+        cartId: cart.id,
+        medicineId,
+      },
+    },
+  });
+
+  if (cartItem) {
+    await prisma.cartItem.update({
+      where: { id: cartItem.id },
+      data: {
+        quantity: cartItem.quantity + quantity,
+      },
+    });
+  } else {
+    await prisma.cartItem.create({
+      data: {
+        cartId: cart.id,
+        medicineId,
+        quantity,
+        price: medicine.price,
+      },
+    });
+  }
+
+  return await prisma.cart.findUnique({
+    where: { id: cart.id },
+    include: {
+      items: {
+        include: { medicine: true },
+      },
+    },
+  });
+};
+const getOrCreateCart = async (customerId: string) => {
   let cart = await prisma.cart.findUnique({
-    where: { userId },
+    where: { customerId },
     include: {
       items: {
         include: {
@@ -14,7 +70,7 @@ const getOrCreateCart = async (userId: string) => {
 
   if (!cart) {
     cart = await prisma.cart.create({
-      data: { userId },
+      data: { customerId },
       include: {
         items: {
           include: {
@@ -28,46 +84,9 @@ const getOrCreateCart = async (userId: string) => {
   return cart;
 };
 
-const addToCart = async (
-  userId: string,
-  medicineId: string,
-  quantity: number,
-) => {
-  if (quantity <= 0) {
-    throw new Error("Quantity must be greater than 0");
-  }
-
-  const cart = await getOrCreateCart(userId);
-
-  const existingItem = await prisma.cartItem.findFirst({
-    where: {
-      cartId: cart.id,
-      medicineId,
-    },
-  });
-
-  if (existingItem) {
-    await prisma.cartItem.update({
-      where: { id: existingItem.id },
-      data: {
-        quantity: existingItem.quantity + quantity,
-      },
-    });
-  } else {
-    await prisma.cartItem.create({
-      data: {
-        cartId: cart.id,
-        medicineId,
-        quantity,
-      },
-    });
-  }
-
-  return getOrCreateCart(userId);
-};
 
 const updateQuantity = async (
-  userId: string,
+  customerId: string,
   itemId: string,
   quantity: number,
 ) => {
@@ -75,7 +94,7 @@ const updateQuantity = async (
     throw new Error("Quantity must be greater than 0");
   }
 
-  const cart = await getOrCreateCart(userId);
+  const cart = await getOrCreateCart(customerId);
 
   return prisma.cartItem.updateMany({
     where: {
@@ -86,8 +105,8 @@ const updateQuantity = async (
   });
 };
 
-const removeFromCart = async (userId: string, itemId: string) => {
-  const cart = await getOrCreateCart(userId);
+const removeFromCart = async (customerId: string, itemId: string) => {
+  const cart = await getOrCreateCart(customerId);
 
   await prisma.cartItem.deleteMany({
     where: {
