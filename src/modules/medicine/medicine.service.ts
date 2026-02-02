@@ -133,6 +133,19 @@ const getAllMedicines = async ({
     };
 };
 
+const getManageAllMedicines = async () => {
+ 
+    const allPost = await prisma.medicine.findMany({
+        include : {
+            _count : {
+                select : {review : true}
+            }
+        }
+    });
+
+    return allPost
+};
+
 const getMedicineById = async (id: string) => {
   return prisma.medicine.findUnique({
     where: { id },
@@ -160,6 +173,7 @@ export const MedicineService = {
   createMedicine,
   getSellerMedicines,
   getAllMedicines,
+  getManageAllMedicines,
   getMedicineById,
   updateMedicine,
   deleteMedicine,

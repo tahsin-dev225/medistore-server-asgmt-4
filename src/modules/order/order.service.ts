@@ -46,20 +46,29 @@ const createOrder = async (customerId: string) => {
   return orders;
 };
 
+const getCustomerOrder = async (
+customerId : string) => {
+    const andConditions: OrderWhereInput[] = []
+
+
+    if (customerId) {
+        andConditions.push({
+            customerId 
+        })
+    }
+
+    const sellerAllOrder = await prisma.order.findMany({
+        where: {
+            customerId
+        },
+    });
+
+    return {
+        data : sellerAllOrder
+    };
+};
+
 const getSellerOrder = async (
-//     {
-//     page,
-//     limit,
-//     skip,
-//     sortBy,
-//     sortOrder
-// }: {
-//     page : number,
-//     limit : number,
-//     skip : number,
-//     sortBy : string,
-//     sortOrder : string 
-// },
 sellerId : string) => {
     const andConditions: OrderWhereInput[] = []
 
@@ -71,73 +80,33 @@ sellerId : string) => {
     }
 
     const sellerAllOrder = await prisma.order.findMany({
-    //   take : limit,
-    //   skip,
         where: {
             sellerId
         },
-        // orderBy : {
-        //   [sortBy] : sortOrder
-        // }
     });
 
-    // const total = await prisma.order.count({
-    //     where: {
-    //         AND: andConditions
-    //     }
-    // })
     return {
-        data : sellerAllOrder,
-        // pagination : {
-        //     total,
-            // page,
-            // limit,
-        //     totalPage : Math.ceil(total / limit)
-        // }
+        data : sellerAllOrder
     };
 };
 
 const getAllOrder = async ({
-    page,
-    limit,
-    skip,
     sortBy,
     sortOrder
 }: {
     sellerId: string | undefined,
-    page : number,
-    limit : number,
-    skip : number,
     sortBy : string,
     sortOrder : string 
 }) => {
-    const andConditions: OrderWhereInput[] = []
 
     const allOrder = await prisma.order.findMany({
-      take : limit,
-      skip,
-        where: {
-            AND: andConditions
-        },
         orderBy : {
           [sortBy] : sortOrder
         }
     });
 
-    const total = await prisma.order.count({
-        where: {
-            AND: andConditions
-        }
-    })
-    return {
-        data : allOrder,
-        pagination : {
-            total,
-            page,
-            limit,
-            totalPage : Math.ceil(total / limit)
-        }
-    };
+    
+    return  allOrder 
 };
 
 const getOrderById = async (id: string) => {
@@ -164,6 +133,7 @@ export const orderService = {
   getAllOrder,
   getOrderById,
   getSellerOrder,
+  getCustomerOrder,
   updateOrder,
   deleteOrder
 };

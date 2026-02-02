@@ -4,9 +4,13 @@ import auth, { userRole } from "../../middlewere/auth";
 
 const router = express.Router();
 
-router.get("/", auth(userRole.CUSTOMER), cartController.getMyCart);
+router.get("/", 
+  auth(userRole.CUSTOMER),
+   cartController.getMyCart);
 
-router.post("/items", auth(userRole.CUSTOMER), cartController.addToCart);
+router.post("/items",
+   auth(userRole.CUSTOMER), 
+   cartController.addToCart);
 
 router.patch(
   "/items/:itemId",

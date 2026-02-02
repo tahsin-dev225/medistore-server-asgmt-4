@@ -3,39 +3,12 @@ import {  UserUpdateInput, UserWhereInput } from "../../../generated/prisma/mode
 import { prisma } from "../../lib/prisma";
 
 
-const getAllUsers = async ({
-    page,
-    limit,
-    skip,
-}: {
-    page : number,
-    limit : number,
-    skip : number,
-}) => {
+const getAllUsers = async () => {
     const andConditions: UserWhereInput[] = []
 
-    const allUser = await prisma.user.findMany({
-      take : limit,
-      skip,
-        where: {
-            AND: andConditions
-        }
-    });
+    const allUser = await prisma.user.findMany();
 
-    const total = await prisma.user.count({
-        where: {
-            AND: andConditions
-        }
-    })
-    return {
-        data : allUser,
-        pagination : {
-            total,
-            page,
-            limit,
-            totalPage : Math.ceil(total / limit)
-        }
-    };
+    return  allUser
 };
 
 const getUserById = async (id: string) => {

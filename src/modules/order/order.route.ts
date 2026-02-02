@@ -12,6 +12,12 @@ router.get(
 )
 
 router.get(
+  '/customer/all',
+  auth(userRole.CUSTOMER),
+  orderControlle.getCustomerOrder
+)
+
+router.get(
   '/:orderId',
   orderControlle.getOrderById
 )

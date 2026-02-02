@@ -12,7 +12,8 @@ router.get(
 
 router.get(
   '/:userId',
-  auth(userRole.ADMIN,userRole.CUSTOMER, userRole.SELLLER),
+  auth(userRole.ADMIN,userRole.CUSTOMER,
+     userRole.SELLLER),
 
 )
 

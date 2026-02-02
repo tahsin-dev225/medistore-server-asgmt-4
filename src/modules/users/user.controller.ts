@@ -8,9 +8,9 @@ import { userService } from "./user.service";
 
 const getAllUser = async (req: Request, res: Response) => {
     try {
-      const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
+      // const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
 
-      const result = await userService.getAllUsers({ page, limit, skip })
+      const result = await userService.getAllUsers()
       res.status(200).json(result)
     } catch (e) {
       res.status(400).json({

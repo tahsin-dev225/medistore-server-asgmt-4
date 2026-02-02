@@ -11,6 +11,11 @@ router.get(
 )
 
 router.get(
+  '/all',  
+  MedicineControlle.getManageAllMedicines
+)
+
+router.get(
   '/:medicineId',
   MedicineControlle.getMedicineId
 )

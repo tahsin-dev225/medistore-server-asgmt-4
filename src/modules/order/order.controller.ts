@@ -21,6 +21,32 @@ const createOrder = async (req : Request,res:Response, next : NextFunction)=>{
 }
 
 
+const getCustomerOrder = async (req: Request, res: Response) => {
+    try {
+
+      // const {sellerId} = req.params;
+      const user = req.user;
+      
+      if(!user || user.role !== "CUSTOMER"){
+        return res.status(401).json({
+          error  : "Unothorized!, You are not Customer."
+        })
+      }
+
+      // const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
+
+      const result = await orderService.getCustomerOrder(
+        // { page, limit, skip,sortBy,sortOrder },
+        user.id as string)
+      res.status(200).json(result)
+    } catch (e) {
+      res.status(400).json({
+          error: "Couldn't get medicine data.",
+          details: e
+      })
+    }
+}
+
 const getSellerOrder = async (req: Request, res: Response) => {
     try {
 
@@ -55,7 +81,7 @@ const getAllOrder = async (req: Request, res: Response) => {
 
       const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
 
-      const result = await orderService.getAllOrder({ sellerId, page, limit, skip,sortBy,sortOrder })
+      const result = await orderService.getAllOrder({ sellerId,sortBy,sortOrder })
       res.status(200).json(result)
     } catch (e) {
       res.status(400).json({
@@ -125,6 +151,7 @@ const deleteOrder = async ( req: Request,res: Response,next: NextFunction,) => {
 export const orderControlle = {
   createOrder,
   getSellerOrder,
+  getCustomerOrder,
   getAllOrder,
   getOrderById,
   deleteOrder,

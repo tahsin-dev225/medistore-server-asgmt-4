@@ -5,7 +5,8 @@ import paginationSortingHelper from "../../helpers/paginationSortingHelper";
 const createMedicine = async (req : Request,res:Response, next : NextFunction)=>{
   try {
     const user = req.user;
-    console.log(req.body);
+    console.log('create medicine',req.body);
+    console.log('create medicine',req.user);
     if(!user){
       return res.status(401).json({
         error  : "Unothorized!, No user"
@@ -37,6 +38,18 @@ const getSellerMedicines = async (req: Request, res: Response) => {
       const result = await MedicineService.getSellerMedicines(
         // { page, limit, skip,sortBy,sortOrder },
         user?.id as string)
+      res.status(200).json(result)
+    } catch (e) {
+      res.status(400).json({
+          error: "Couldn't get medicine data.",
+          details: e
+      })
+    }
+}
+
+const getManageAllMedicines = async (req: Request, res: Response) => {
+    try {
+      const result = await MedicineService.getManageAllMedicines()
       res.status(200).json(result)
     } catch (e) {
       res.status(400).json({
@@ -116,6 +129,7 @@ export const MedicineControlle = {
   createMedicine,
   getSellerMedicines,
   getAllMedicines,
+  getManageAllMedicines,
   getMedicineId,
   deleteMedicine,
   updateMedicine,
