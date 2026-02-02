@@ -24,7 +24,6 @@ const createOrder = async (req : Request,res:Response, next : NextFunction)=>{
 const getCustomerOrder = async (req: Request, res: Response) => {
     try {
 
-      // const {sellerId} = req.params;
       const user = req.user;
       
       if(!user || user.role !== "CUSTOMER"){
@@ -33,10 +32,7 @@ const getCustomerOrder = async (req: Request, res: Response) => {
         })
       }
 
-      // const {page,limit, skip,sortBy, sortOrder} = paginationSortingHelper(req.query)
-
       const result = await orderService.getCustomerOrder(
-        // { page, limit, skip,sortBy,sortOrder },
         user.id as string)
       res.status(200).json(result)
     } catch (e) {

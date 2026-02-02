@@ -19,7 +19,6 @@ const createOrder = async (customerId: string) => {
   if (!cart || cart.items.length === 0) {
     throw new Error("Cart is empty");
   }
-
   const orders = [];
 
   for (const item of cart.items) {
@@ -71,8 +70,6 @@ customerId : string) => {
 const getSellerOrder = async (
 sellerId : string) => {
     const andConditions: OrderWhereInput[] = []
-
-
     if (sellerId) {
         andConditions.push({
             sellerId 
