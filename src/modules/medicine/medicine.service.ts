@@ -14,15 +14,6 @@ const createMedicine = async (data : Omit<Medicine,'id' | 'createdAt' | 'updated
 }
 
 const getSellerMedicines = async (
-  // {
-//     page,limit,skip, sortBy, sortOrder
-// }: {
-//     page : number,
-//     limit : number,
-//     skip : number,
-//     sortBy : string,
-//     sortOrder : string 
-// },
 sellerId : string
 ) => {
     const andConditions: MedicineWhereInput[] = []
@@ -38,27 +29,10 @@ sellerId : string
         where: {
             sellerId
         }
-        // ,
-        // include : {
-        //     _count : {
-        //         select : {review : true}
-        //     }
-        // }
     });
 
-    // const total = await prisma.medicine.count({
-    //     where: {
-    //         AND: andConditions
-    //     }
-    // })
     return {
-        data : allPost,
-        // pagination : {
-        //     total,
-        //     // page,
-        //     // limit,
-        //     totalPage : Math.ceil(total / limit)
-        // }
+        data : allPost
     };
 };
 
