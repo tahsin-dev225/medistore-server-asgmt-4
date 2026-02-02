@@ -5,8 +5,6 @@ import paginationSortingHelper from "../../helpers/paginationSortingHelper";
 const createMedicine = async (req : Request,res:Response, next : NextFunction)=>{
   try {
     const user = req.user;
-    console.log('create medicine',req.body);
-    console.log('create medicine',req.user);
     if(!user){
       return res.status(401).json({
         error  : "Unothorized!, No user"

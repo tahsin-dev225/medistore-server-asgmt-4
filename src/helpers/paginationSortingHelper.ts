@@ -20,7 +20,6 @@ const paginationSortingHelper =(options : IOptions) : IOptionResult => {
 
   const sortBy = options.sortBy  || "createdAt";
   const sortOrder = options.sortOrder  || "desc" 
-  console.log(options);
 
   return {
     page,
