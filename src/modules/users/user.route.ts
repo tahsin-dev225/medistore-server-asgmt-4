@@ -14,7 +14,7 @@ router.get(
   '/:userId',
   auth(userRole.ADMIN,userRole.CUSTOMER,
      userRole.SELLLER),
-
+    UserController.getUserById
 )
 
 router.patch(
