@@ -2,50 +2,14 @@ import { Medicine } from "../../../generated/prisma/client";
 import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
-
-const createMedicine = async({
-  content,
-  customerId,
-  medicineId,
-}: {
-  content: string;
-  customerId: string;
-  medicineId: string;
-}) => {
-    const deliveredOrder = await prisma.order.findFirst({
-    where: {
-      customerId,
-      medicineId,
-      status: "DELIVERED",
-    },
-  });
-
-  if (!deliveredOrder) {
-    throw new Error(
-      "You can only review medicines that you have received"
-    );
-  }
-
-  const alreadyReviewed = await prisma.review.findFirst({
-    where: {
-      customerId,
-      medicineId,
-    },
-  });
-
-  if (alreadyReviewed) {
-    throw new Error("You already reviewed this product");
-  }
-
-  const review = await prisma.review.create({
-    data: {
-      content,
-      customerId,
-      medicineId,
-    },
-  });
-
-  return review;
+const createMedicine = async (data : Omit<Medicine,'id' | 'createdAt' | 'updatedAt' | 'sellerId'>,sellerId : string) => {
+   const result = await prisma.medicine.create({
+    data : {
+      ...data,
+      sellerId
+    }
+   })
+   return result;
 }
 
 const getSellerMedicines = async (
